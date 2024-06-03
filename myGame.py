@@ -82,7 +82,7 @@ class myGame:
 
     def play(self):
         # Initialize the VideoCapture object to read from the webcam.
-        cap = cv2.VideoCapture(1)
+        cap = cv2.VideoCapture(0)
 
         # Create named window for resizing purposes.
         cv2.namedWindow("Subway Surfers with Pose Detection", cv2.WINDOW_NORMAL)
@@ -156,31 +156,30 @@ class myGame:
 
                         # Check if the counter is equal to the required number of consecutive frames.
                         if self.counter == self.num_of_frames:
+                            # Retreive the y-coordinate of the left shoulder landmark.
+                            left_y = int(
+                                results.pose_landmarks.landmark[
+                                    self.pose.mp_pose.PoseLandmark.RIGHT_SHOULDER
+                                ].y
+                                * image_height
+                            )
+
+                            # Retreive the y-coordinate of the right shoulder landmark.
+                            right_y = int(
+                                results.pose_landmarks.landmark[
+                                    self.pose.mp_pose.PoseLandmark.LEFT_SHOULDER
+                                ].y
+                                * image_height
+                            )
+
+                            # Calculate the intial y-coordinate of the mid-point of both shoulders of the person.
+                            self.MID_Y = abs(right_y + left_y) // 2
                             # Command to Start the game first time.
                             # ----------------------------------------------------------------------------------------------------------
                             # Check if the game has not started yet.
                             if not (self.game_started):
                                 # Update the value of the variable that stores the game state.
                                 self.game_started = True
-
-                                # Retreive the y-coordinate of the left shoulder landmark.
-                                left_y = int(
-                                    results.pose_landmarks.landmark[
-                                        self.pose.mp_pose.PoseLandmark.RIGHT_SHOULDER
-                                    ].y
-                                    * image_height
-                                )
-
-                                # Retreive the y-coordinate of the right shoulder landmark.
-                                right_y = int(
-                                    results.pose_landmarks.landmark[
-                                        self.pose.mp_pose.PoseLandmark.LEFT_SHOULDER
-                                    ].y
-                                    * image_height
-                                )
-
-                                # Calculate the intial y-coordinate of the mid-point of both shoulders of the person.
-                                self.MID_Y = abs(right_y + left_y) // 2
 
                                 pydirectinput.press("space")
 

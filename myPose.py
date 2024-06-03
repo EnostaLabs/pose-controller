@@ -12,13 +12,13 @@ class myPose:
 
         # Setup the Pose function for images.
         self.pose_image = self.mp_pose.Pose(
-            static_image_mode=True, min_detection_confidence=0.5, model_complexity=1
+            static_image_mode=True, min_detection_confidence=0.5, model_complexity=0
         )
 
         # Setup the Pose function for videos.
         self.pose_video = self.mp_pose.Pose(
             static_image_mode=False,
-            model_complexity=1,
+            model_complexity=0,
             min_detection_confidence=0.7,
             min_tracking_confidence=0.7,
         )
