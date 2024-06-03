@@ -1,7 +1,7 @@
 from time import time
 
 import cv2
-import pyautogui
+import pydirectinput
 
 from myPose import myPose
 
@@ -39,7 +39,7 @@ class myGame:
             LRC == "Center" and self.x_pos_index == 2
         ):
             # Press the left arrow key.
-            pyautogui.press("left")
+            pydirectinput.press("left")
 
             # Update the horizontal position index of the character.
             self.x_pos_index -= 1
@@ -49,7 +49,7 @@ class myGame:
             LRC == "Center" and self.x_pos_index == 0
         ):
             # Press the right arrow key.
-            pyautogui.press("right")
+            pydirectinput.press("right")
 
             # Update the horizontal position index of the character.
             self.x_pos_index += 1
@@ -60,7 +60,7 @@ class myGame:
         # Check if the person has jumped.
         if JSD == "Jumping" and self.y_pos_index == 1:
             # Press the up arrow key
-            pyautogui.press("up")
+            pydirectinput.press("up")
 
             # Update the veritcal position index of  the character.
             self.y_pos_index += 1
@@ -68,7 +68,7 @@ class myGame:
             # Check if the person has crouched.
         elif JSD == "Crouching" and self.y_pos_index == 1:
             # Press the down arrow key
-            pyautogui.press("down")
+            pydirectinput.press("down")
 
             # Update the veritcal position index of the character.
             self.y_pos_index -= 1
@@ -82,15 +82,15 @@ class myGame:
 
     def play(self):
         # Initialize the VideoCapture object to read from the webcam.
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
 
         # Create named window for resizing purposes.
         cv2.namedWindow("Subway Surfers with Pose Detection", cv2.WINDOW_NORMAL)
-        cv2.setWindowProperty(
-            "Subway Surfers with Pose Detection",
-            cv2.WND_PROP_FULLSCREEN,
-            cv2.WINDOW_FULLSCREEN,
-        )
+        # cv2.setWindowProperty(
+        #     "Subway Surfers with Pose Detection",
+        #     cv2.WND_PROP_FULLSCREEN,
+        #     cv2.WINDOW_FULLSCREEN,
+        # )
         while True:
             # Read a frame
             ret, image = cap.read()
@@ -113,13 +113,6 @@ class myGame:
 
                 # Check if the pose landmarks in the frame are detected.
                 if results.pose_landmarks:
-                    if not self.MID_Y:
-                        self.MID_Y = int(
-                            results.pose_landmarks.landmark[
-                                self.pose.mp_pose.PoseLandmark.RIGHT_SHOULDER
-                            ].y
-                            * image_height
-                        )
                     # Check if the game has started
                     if self.game_started:
                         # Commands to control the horizontal movements of the character.
@@ -189,17 +182,16 @@ class myGame:
                                 # Calculate the intial y-coordinate of the mid-point of both shoulders of the person.
                                 self.MID_Y = abs(right_y + left_y) // 2
 
-                                # Move to 1300, 800, then click the left mouse button to start the game.
-                                pyautogui.click(x=1300, y=800, button="left")
+                                pydirectinput.press("space")
 
                             # ----------------------------------------------------------------------------------------------------------
                             # Command to resume the game after death of the character.
                             # ----------------------------------------------------------------------------------------------------------
 
                             # Otherwise if the game has started.
-                            else:
-                                # Press the space key.
-                                pyautogui.press("space")
+                            # else:
+                            #     # Press the space key.
+                            #     pyautogui.press("space")
 
                             # ----------------------------------------------------------------------------------------------------------
                             # Update the counter value to zero.
