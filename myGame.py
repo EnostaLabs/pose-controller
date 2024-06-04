@@ -94,12 +94,6 @@ class myGame:
                 if results.pose_landmarks:
                     # Check if the game has started
                     if self.game_started:
-                        # Commands to control the horizontal movements of the character.
-                        # --------------------------------------------------------------------------------------------------------------
-                        # Get horizontal position of the person in the frame.
-                        image, LRC = self.pose.check_pose_LRC(image, results, draw=True)
-                        self.move_LRC(LRC)
-
                         # ------------------------------------------------------------------------------------------------------------------
                         # Commands to control the vertical movements of the character.
                         # ------------------------------------------------------------------------------------------------------------------
