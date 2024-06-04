@@ -1,7 +1,7 @@
 from time import time
 
 import cv2
-import pydirectinput
+import socketio
 
 from myPose import myPose
 
@@ -33,48 +33,27 @@ class myGame:
         # Initialize the number of consecutive frames on which we want to check if person hands joined before starting the game.
         self.num_of_frames = 5
 
-    def move_LRC(self, LRC):
-        # Check if the person has moved to left from center or to center from right.
-        if (LRC == "Left" and self.x_pos_index != 0) or (
-            LRC == "Center" and self.x_pos_index == 2
-        ):
-            # Press the left arrow key.
-            pydirectinput.press("left")
-
-            # Update the horizontal position index of the character.
-            self.x_pos_index -= 1
-
-            # Check if the person has moved to Right from center or to center from left.
-        elif (LRC == "Right" and self.x_pos_index != 2) or (
-            LRC == "Center" and self.x_pos_index == 0
-        ):
-            # Press the right arrow key.
-            pydirectinput.press("right")
-
-            # Update the horizontal position index of the character.
-            self.x_pos_index += 1
-
-        return
+        self.client = socketio.SimpleClient()
+        self.client.connect("http://localhost:5000", transports=["websocket"])
 
     def move_JSD(self, JSD):
         # Check if the person has jumped.
         if JSD == "Jumping" and self.y_pos_index == 1:
-            # Press the up arrow key
-            pydirectinput.press("up")
+            self.client.emit("character_movement", {"direction": "up"})
 
             # Update the veritcal position index of  the character.
             self.y_pos_index += 1
 
-            # Check if the person has crouched.
+        # Check if the person has crouched.
         elif JSD == "Crouching" and self.y_pos_index == 1:
-            # Press the down arrow key
-            pydirectinput.press("down")
+            self.client.emit("character_movement", {"direction": "down"})
 
             # Update the veritcal position index of the character.
             self.y_pos_index -= 1
 
         # Check if the person has stood.
         elif JSD == "Standing" and self.y_pos_index != 1:
+            self.client.emit("character_movement", {"direction": "normal"})
             # Update the veritcal position index of the character.
             self.y_pos_index = 1
 
@@ -181,16 +160,20 @@ class myGame:
                                 # Update the value of the variable that stores the game state.
                                 self.game_started = True
 
-                                pydirectinput.press("space")
+                                self.client.emit(
+                                    "character_movement", {"direction": "space"}
+                                )
 
                             # ----------------------------------------------------------------------------------------------------------
                             # Command to resume the game after death of the character.
                             # ----------------------------------------------------------------------------------------------------------
 
                             # Otherwise if the game has started.
-                            # else:
-                            #     # Press the space key.
-                            #     pyautogui.press("space")
+                            else:
+
+                                self.client.emit(
+                                    "character_movement", {"direction": "space"}
+                                )
 
                             # ----------------------------------------------------------------------------------------------------------
                             # Update the counter value to zero.
