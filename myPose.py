@@ -301,7 +301,7 @@ class myPose:
         )
 
         # Compare the distance between the wrists with a appropriate threshold to check if both hands are joined.
-        if euclidean_distance < 130:
+        if euclidean_distance < 80:
             # Set the hands status to joined.
             hand_status = "Hands Joined"
 
