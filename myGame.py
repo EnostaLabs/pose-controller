@@ -28,7 +28,7 @@ class myGame:
         self.time1 = 0
 
         # Declate a variable to store the intial y-coordinate of the mid-point of both shoulders of the person.
-        self.MID_Y = None
+        self.MID_Y = 250
 
         # Initialize the number of consecutive frames on which we want to check if person hands joined before starting the game.
         self.num_of_frames = 5
@@ -125,25 +125,6 @@ class myGame:
 
                         # Check if the counter is equal to the required number of consecutive frames.
                         if self.counter == self.num_of_frames:
-                            # Retreive the y-coordinate of the left shoulder landmark.
-                            left_y = int(
-                                results.pose_landmarks.landmark[
-                                    self.pose.mp_pose.PoseLandmark.RIGHT_SHOULDER
-                                ].y
-                                * image_height
-                            )
-
-                            # Retreive the y-coordinate of the right shoulder landmark.
-                            right_y = int(
-                                results.pose_landmarks.landmark[
-                                    self.pose.mp_pose.PoseLandmark.LEFT_SHOULDER
-                                ].y
-                                * image_height
-                            )
-
-                            # Calculate the intial y-coordinate of the mid-point of both shoulders of the person.
-                            self.MID_Y = abs(right_y + left_y) // 2
-
                             # Command to Start the game first time.
                             # ----------------------------------------------------------------------------------------------------------
                             # Check if the game has not started yet.
