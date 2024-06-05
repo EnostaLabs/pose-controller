@@ -205,8 +205,8 @@ class myPose:
         actual_mid_y = abs(right_y + left_y) // 2
 
         # Calculate the upper and lower bounds of the threshold.
-        lower_bound = MID_Y - 10
-        upper_bound = MID_Y + 10
+        lower_bound = MID_Y - 30
+        upper_bound = MID_Y + 30
 
         # Check if the person has jumped that is when the y-coordinate of the mid-point
         # of both shoulders is less than the lower bound.
