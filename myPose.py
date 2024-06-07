@@ -346,3 +346,74 @@ class myPose:
         else:
             # Return the output image and the classified hands status indicating whether the hands are joined or not.
             return output_image, hand_status
+
+    def check_hands_up(self, image, results, draw=False, display=False):
+
+        # Get the height and width of the input image.
+        height, width, _ = image.shape
+
+        # Create a copy of the input image to write the hands status label on.
+        output_image = image.copy()
+
+        # Get the left wrist landmark x and y coordinates.
+        left_wrist_landmark = int(
+            results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].y
+            * height
+        )
+
+        # Get the right wrist landmark x and y coordinates.
+        right_wrist_landmark = int(
+            results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].y
+            * height
+        )
+
+        # Retreive the y-coordinate of the left shoulder landmark.
+        left_y = int(
+            results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_SHOULDER].y
+            * height
+        )
+
+        # Retreive the y-coordinate of the right shoulder landmark.
+        right_y = int(
+            results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_SHOULDER].y
+            * height
+        )
+
+        # Calculate the y-coordinate of the mid-point of both shoulders.
+        actual_mid_y = abs(right_y + left_y) // 2
+
+        # Compare the distance between the wrists with a appropriate threshold to check if both hands are joined.
+        if left_wrist_landmark < actual_mid_y and right_wrist_landmark < actual_mid_y:
+            # Set the hands status to joined.
+            hand_status = "Hands Up"
+
+            # Set the color value to green.
+            color = (0, 255, 0)
+
+        # Otherwise.
+        else:
+            # Set the hands status to not joined.
+            hand_status = "Hands Down"
+
+            # Set the color value to red.
+            color = (0, 0, 255)
+
+        # Check if the Hands Joined status and hands distance are specified to be written on the output image.
+        if draw:
+            # Write the classified hands status on the image.
+            cv2.putText(
+                output_image, hand_status, (10, 30), cv2.FONT_HERSHEY_PLAIN, 2, color, 3
+            )
+
+        # Check if the output image is specified to be displayed.
+        if display:
+            # Display the output image.
+            plt.figure(figsize=[10, 10])
+            plt.imshow(output_image[:, :, ::-1])
+            plt.title("Output Image")
+            plt.axis("off")
+
+        # Otherwise
+        else:
+            # Return the output image and the classified hands status indicating whether the hands are joined or not.
+            return output_image, hand_status
