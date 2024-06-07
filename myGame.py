@@ -61,7 +61,7 @@ class myGame:
         cap = cv2.VideoCapture(0)
 
         # Create named window for resizing purposes.
-        cv2.namedWindow("Subway Surfers with Pose Detection", cv2.WINDOW_NORMAL)
+        cv2.namedWindow("Chrome Dino with Pose Detection", cv2.WINDOW_NORMAL)
 
         while True:
             # Read a frame
@@ -96,6 +96,29 @@ class myGame:
                             image, results, self.MID_Y, draw=True
                         )
                         self.move_JSD(JSD)
+
+                    if (
+                        self.pose.check_hands_joined(image, results)[1]
+                        == "Hands Joined"
+                    ):
+                        # Retreive the y-coordinate of the left shoulder landmark.
+                        left_y = int(
+                            results.pose_landmarks.landmark[
+                                self.pose.mp_pose.PoseLandmark.RIGHT_SHOULDER
+                            ].y
+                            * image_height
+                        )
+
+                        # Retreive the y-coordinate of the right shoulder landmark.
+                        right_y = int(
+                            results.pose_landmarks.landmark[
+                                self.pose.mp_pose.PoseLandmark.LEFT_SHOULDER
+                            ].y
+                            * image_height
+                        )
+
+                        # Calculate the intial y-coordinate of the mid-point of both shoulders of the person.
+                        self.MID_Y = abs(right_y + left_y) // 2
 
                     # Command to Start or resume the game.
                     # ------------------------------------------------------------------------------------------------------------------
